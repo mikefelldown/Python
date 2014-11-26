@@ -44,7 +44,7 @@ def main():
     #cur.commit()
     #Iterate through rows of excel sheet and insert or replace data
     headers = [ws.cell(0,x).value for x in range (ws.ncols)]
-    print "Enter the number for the first element:"
+    print "Enter the number for the first analysed element:"
     for i in range(len(headers)):
         print "{0}:".format(i) + headers[i],
     first = raw_input()
