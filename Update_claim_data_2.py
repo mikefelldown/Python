@@ -48,6 +48,8 @@ with arcpy.da.UpdateCursor(fc,"*","\"" + cid + "\" is not NULL") as rows:
             # Get data tables from html doc and clean up for import into xml format
             try:
                 tables = soup.findAll("table")
+                if tables[2].findAll("td")[2].text.find("ACTIVE") < 0:
+                    raise Exception("Claim number %s has been cancelled" % row[cii])
                 tds = tables[3].findAll("td")
                 td2 = tables[4].findAll("td")
                 anniversary = datetime.strptime(tds[1].string,"%Y-%b-%d")

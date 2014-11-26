@@ -15,7 +15,7 @@ with da.SearchCursor("Sources",["TransferID"]) as rows:
     sources = list(set([r for r in rows]))
     for row in sources:
         arcpy.AddMessage(row[0])
-        thismap.description = row[0]
+        thismap.description = "Map No. " + row[0]
         source = da.SearchCursor("Sources",["TransferID","SourceID"], "\"TransferID\" = '" + row[0] + "'")
         src = ", ".join(["'" + str(int(s[1])) + "'" for s in source])
         lyrs[2].definitionQuery = "\"CLAIM_NUM\" in (" + src + ")"
@@ -34,4 +34,3 @@ with da.SearchCursor("Sources",["TransferID"]) as rows:
         arcpy.SelectLayerByAttribute_management(lyrs[0], "CLEAR_SELECTION")
         arcpy.SelectLayerByAttribute_management(lyrs[2], "CLEAR_SELECTION")
         mapping.ExportToPDF(thismap, row[0] + ".pdf")
-        

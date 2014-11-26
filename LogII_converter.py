@@ -10,6 +10,7 @@
 #-------------------------------------------------------------------------------
 
 import xlwt, os
+from xlwt.Style import easyxf
 from datetime import datetime
 
 project = None
@@ -64,7 +65,7 @@ def processHeader(line):
     elif line[:3] == "LOC":
         location = line[3:].split('"')[1]
     elif line[:3] == "MA ":
-        return
+        pass
 
 def processFirst(line):
     """
@@ -75,12 +76,12 @@ def processFirst(line):
     global Easting
     global Elevation
     global Length
-    vars = [x for x in line[2:].split(" ") if x <> ""]
-    holeID = vars[0]
-    Northing = vars[1]
-    Easting = vars[2]
-    Elevation = vars[3]
-    Length = vars[4]
+    elements = [x for x in line[2:].split(" ") if x <> ""]
+    holeID = elements[0]
+    Northing = elements[1]
+    Easting = elements[2]
+    Elevation = elements[3]
+    Length = elements[4]
 
 def processSurveys(line):
     """
@@ -129,7 +130,7 @@ def main():
     description = []
     mainLith = True
     os.chdir(r"C:\Projects\temp")
-    filename = r"Z:\NOT ACTIVE PROJECTS\CANICO\HISTORICAL\DRILLING\CANICO\B-2.IN"
+    filename = r"X:\DATA FILES\PROPERTIES\ANOKI\Temp\Historic Anoki McBean Logs - Master Database - Surpac Database\57322-0.IN"
     while not filename:
         filename = raw_input("LogII file name (.in) : ")
 
@@ -164,7 +165,11 @@ def main():
 
     # parse datafile and write data to worksheets
     with open(filename,'rb') as logIIfile:
-        processFirst(logIIfile.readline())
+        while True:
+            firstline = logIIfile.readline()
+            if firstline[0] == '1' or firstline[0] == '0':
+                processFirst(firstline)
+                break
         for l in logIIfile.readlines():
             if l[0] == "1":
                 processHeader(l[1:].strip())
@@ -186,6 +191,8 @@ def main():
                     sheets[3].write(r3,var[0]+2,var[1])
 
             elif l[0] == "4":
+                sheets[4].flush_row_data()
+                sheets[5].flush_row_data()
                 mainLith = True
                 data = processDesc(l)
                 row = sheets[4].last_used_row + 1
@@ -193,7 +200,6 @@ def main():
                 sheets[4].write(row,1,holeID)
                 for item in enumerate(data):
                     sheets[4].write(row,item[0]+2,item[1])
-                sheet.flush_row_data()
                 description = []
             elif l[0] == "5" and l.find("\"\"") == -1:
                 if [x for x in list(l[2:]) if x <> " "][0].isdigit():

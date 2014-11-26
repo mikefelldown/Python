@@ -1,16 +1,16 @@
 import arcpy
+import numpy
 
 mylayer = arcpy.GetParameterAsText(0)
-outputworkspace = arcpy.GetParameterAsText(1)
+outputworkspace = arcpy.GetParameterAsText(1) or r"C:\Users\mfell.QM\Documents\ArcGIS\Default.gdb"
 desc = arcpy.Describe(mylayer)
 shapeField = desc.ShapeFieldName
 fields = [f.name for f in desc.Fields]
 shapeIndex = fields.index(shapeField)
-arcpy.AddMessage( "SI:" + str(shapeIndex))
 suffix = ""
 arcpy.env.workspace = outputworkspace
 
-arcpy.Generalize_edit(mylayer,"1")
+
 
 while arcpy.Exists("%s_poly%s" % (mylayer, suffix)):
                    if suffix:
@@ -29,6 +29,6 @@ with arcpy.da.SearchCursor(mylayer,["SHAPE@"]) as rows:
                 part.add(part[0])
             with arcpy.da.InsertCursor(outfc,["SHAPE@"]) as ins:
                 ins.insertRow([arcpy.Polygon(part)])
-        
-        
+
+
 
