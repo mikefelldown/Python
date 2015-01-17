@@ -1,4 +1,5 @@
-import arcpy, urllib, bs4, os
+import arcpy, urllib, os
+import BeautifulSoup as bs4
 from xml.dom import minidom
 from datetime import datetime
 
@@ -56,7 +57,7 @@ with arcpy.da.UpdateCursor(fc,"*","\"" + cid + "\" is not NULL") as rows:
                 row[exi] = anniversary
                 row[wri] = int(tds[5].string.replace("$","").replace(",","").strip())
                 row[tai] = int(td2[1].string.replace("$","").replace(",","").strip())
-                row[tri] = int(td2[5].string.replace("$","").replace(",","").strip())
+                row[tri] = int(td2[5].findChild().string.replace("$","").replace(",","").strip())
                 row[twp] = td2[3].string
                 row[cu] =  int(td2[11].string)
 
