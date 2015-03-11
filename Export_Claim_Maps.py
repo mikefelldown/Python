@@ -17,15 +17,15 @@ with da.SearchCursor("Sources",["TransferID"]) as rows:
         arcpy.AddMessage(row[0])
         thismap.description = "Map No. " + row[0]
         source = da.SearchCursor("Sources",["TransferID","SourceID"], "\"TransferID\" = '" + row[0] + "'")
-        src = ", ".join(["'" + str(int(s[1])) + "'" for s in source])
-        lyrs[2].definitionQuery = "\"CLAIM_NUM\" in (" + src + ")"
+        src = ", ".join(["'" + str(s[1]) + "'" for s in source])
+        lyrs[2].definitionQuery = "\"CLAIM_NUM\" in (" + src + ") or \"DISP_LABEL\" in (" + src + ")"
         dest = da.SearchCursor("Destinations",["TransferID","DestinationID"], "\"TransferID\" = '" + row[0] + "'")
         des = ", ".join(["'" + str(int(s[1])) + "'" for s in dest])
         lyrs[0].definitionQuery = "\"CLAIM_NUM\" in (" + des + ")"
         arcpy.SelectLayerByAttribute_management(lyrs[0], "SWITCH_SELECTION")
         arcpy.SelectLayerByAttribute_management(lyrs[2], "SWITCH_SELECTION")
-        lyrs[0].labelClasses[0].SQLQuery = "\"CLAIM_NUM\" not in (" + src +  ") or \"CLAIM_NUM\" is NULL"
-        lyrs[1].labelClasses[0].SQLQuery = "\"CLAIM_NUM\" not in (" + src + ", " + des + ") or \"CLAIM_NUM\" is NULL"
+        lyrs[0].labelClasses[0].SQLQuery = "(\"CLAIM_NUM\" not in (" + src +  ") or \"CLAIM_NUM\" is NULL) and (\"DISP_LABEL\" not in (" + src + ") or \"DISP_LABEL\" is NULL)"
+        lyrs[1].labelClasses[0].SQLQuery = "(\"CLAIM_NUM\" not in (" + src + ", " + des + ") or \"CLAIM_NUM\" is NULL) and (\"DISP_LABEL\" not in (" + src + ", " + des + ") or \"DISP_LABEL\" is NULL)"
         df[0].zoomToSelectedFeatures()
         if df[0].scale < 24000:
             df[0].scale = 24000
