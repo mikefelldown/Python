@@ -15,12 +15,12 @@ with da.SearchCursor("Sources",["TransferID"]) as rows:
     sources = list(set([r for r in rows]))
     for row in sources:
         arcpy.AddMessage(row[0])
-        thismap.description = "Map No. " + row[0]
+        #thismap.description = "Map No. " + row[0].strip()
         source = da.SearchCursor("Sources",["TransferID","SourceID"], "\"TransferID\" = '" + row[0] + "'")
         src = ", ".join(["'" + str(s[1]) + "'" for s in source])
         lyrs[2].definitionQuery = "\"CLAIM_NUM\" in (" + src + ") or \"DISP_LABEL\" in (" + src + ")"
         dest = da.SearchCursor("Destinations",["TransferID","DestinationID"], "\"TransferID\" = '" + row[0] + "'")
-        des = ", ".join(["'" + str(int(s[1])) + "'" for s in dest])
+        des = ", ".join(["'" + str(s[1]) + "'" for s in dest])
         lyrs[0].definitionQuery = "\"CLAIM_NUM\" in (" + des + ")"
         arcpy.SelectLayerByAttribute_management(lyrs[0], "SWITCH_SELECTION")
         arcpy.SelectLayerByAttribute_management(lyrs[2], "SWITCH_SELECTION")
@@ -33,4 +33,4 @@ with da.SearchCursor("Sources",["TransferID"]) as rows:
             df[0].scale = math.ceil(df[0].scale/1000) * 1000
         arcpy.SelectLayerByAttribute_management(lyrs[0], "CLEAR_SELECTION")
         arcpy.SelectLayerByAttribute_management(lyrs[2], "CLEAR_SELECTION")
-        mapping.ExportToPDF(thismap, row[0] + ".pdf")
+        mapping.ExportToPDF(thismap, row[0].strip() + ".pdf")

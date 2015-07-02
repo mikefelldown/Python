@@ -1,0 +1,39 @@
+# File name: layouts.kv 
+#:kivy 1.7.0
+
+<MyGridLayout>:
+    rows: 2
+    FloatLayout:
+        Button:
+            text: 'F1'
+            size_hint: .3, .3
+            pos: 0, 0
+    RelativeLayout:
+        Button:
+            text: 'R1'
+            size_hint: .3, .3
+            pos: 0, 0
+    GridLayout:
+        cols: 2
+        spacing: 10
+        Button:
+            text: 'G1'
+            size_hint_x: None
+            width: 50
+        Button:
+            text: 'G2'
+        Button:
+            text: 'G3'
+            size_hint_x: None
+            width: 50 
+    AnchorLayout:
+        anchor_x: 'right'
+        anchor_y: 'top'
+        Button:
+            text: 'A1'
+            size_hint: .5, .5
+        Button:
+            text: 'A2'
+            size_hint: .2, .2 
+
+
