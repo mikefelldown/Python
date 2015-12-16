@@ -107,11 +107,13 @@ def processAssays(line):
 
 def processDesc(line):
     if line[0] == "4":
-        items = [x.strip() for x in line[2:].split(" ") if x <> ""]
+        items = [x.strip() for x in line[2:].split(" ") if x.strip() <> "" and x.strip() <> " "]
         if len(items) > 3:
             items[2] = " ".join(items[2:])
             items = items[:3]
+
         items[2] = "; ".join(items[2].split(" "))
+
         return items
 
     elif line[0] == "5":
@@ -130,7 +132,7 @@ def main():
     description = []
     mainLith = True
     os.chdir(r"C:\Projects\temp")
-    filename = r"X:\DATA FILES\PROPERTIES\ANOKI\Temp\Historic Anoki McBean Logs - Master Database - Surpac Database\57322-0.IN"
+    filename = r"M:\DATA FILES\PROPERTIES\ANOKI\Temp\Historic Anoki McBean Logs - Master Database - Surpac Database\57325-0.IN"
     while not filename:
         filename = raw_input("LogII file name (.in) : ")
 
@@ -188,6 +190,8 @@ def main():
                 sheets[3].write(r3,0,project)
                 sheets[3].write(r3,1,holeID)
                 for var in enumerate(data):
+                    if not var[1].isalpha() and var[1][0].isdigit():
+                        var = (var[0],float(var[1]))
                     sheets[3].write(r3,var[0]+2,var[1])
 
             elif l[0] == "4":

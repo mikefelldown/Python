@@ -15,7 +15,7 @@ with da.SearchCursor("Sources",["TransferID"]) as rows:
     sources = list(set([r for r in rows]))
     for row in sources:
         arcpy.AddMessage(row[0])
-        #thismap.description = "Map No. " + row[0].strip()
+        thismap.description = "Work Order No. " + row[0].strip()
         source = da.SearchCursor("Sources",["TransferID","SourceID"], "\"TransferID\" = '" + row[0] + "'")
         src = ", ".join(["'" + str(s[1]) + "'" for s in source])
         lyrs[2].definitionQuery = "\"CLAIM_NUM\" in (" + src + ") or \"DISP_LABEL\" in (" + src + ")"
